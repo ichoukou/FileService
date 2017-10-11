@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.file.dao.FileMapper">
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.file.model.Files">
+		<id column="fileId" property="fileId" jdbcType="INTEGER" />
+		<result column="fileNo" property="fileNo" jdbcType="VARCHAR" />
+		<result column="fileCode" property="fileCode" jdbcType="VARCHAR" />
+		<result column="fileState" property="fileState" jdbcType="INTEGER" />
+		<result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+		<result column="systemCode" property="systemCode" jdbcType="VARCHAR" />
+		<result column="uploadTime" property="uploadTime" jdbcType="TIMESTAMP" />
+		<result column="remark" property="remark" jdbcType="NVARCHAR" />
+		<result column="dateCreate" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="delFlag" property="delFlag" jdbcType="CHAR" />
+		<result column="fileType" property="fileType" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		fileId, fileNo, fileCode, fileState, channelCode,
+		systemCode, uploadTime,
+		remark,
+		dateCreate, delFlag, fileType
+	</sql>
+	
+	<!-- 查询-根据fileNo -->
+	<select id="getByFileNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Files
+		<where>
+			delFlag = 'N' AND fileNo = #{fileNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from Files
+		where fileId = #{fileId,jdbcType=INTEGER}
+	</select>
+	
+	<!-- 新增 -->
+	<insert id="create" parameterType="cn.com.eju.deal.file.model.Files"
+		useGeneratedKeys="true" keyProperty="fileId">
+		INSERT INTO Files 
+		(
+		fileNo, fileCode,
+		fileState, channelCode, systemCode,
+		uploadTime,
+		remark, 
+		dateCreate,delFlag,fileType
+		)
+		VALUES 
+		(
+		#{fileNo,jdbcType=VARCHAR},
+		#{fileCode,jdbcType=VARCHAR},
+		#{fileState,jdbcType=INTEGER},
+		#{channelCode,jdbcType=VARCHAR},
+		#{systemCode,jdbcType=VARCHAR},
+		#{uploadTime,jdbcType=TIMESTAMP},
+		#{remark,jdbcType=NVARCHAR},
+		getDate(),'N', #{fileType,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="cn.com.eju.deal.file.model.Files">
+		UPDATE Files
+		<set>
+			<if test="fileNo != null">
+				fileNo = #{fileNo,jdbcType=VARCHAR},
+			</if>
+			<if test="fileCode != null">
+				fileCode = #{fileCode,jdbcType=VARCHAR},
+			</if>
+			<if test="fileState != null">
+				fileState = #{fileState,jdbcType=INTEGER},
+			</if>
+			<if test="channelCode != null">
+				channelCode = #{channelCode,jdbcType=VARCHAR},
+			</if>
+			<if test="systemCode != null">
+				systemCode = #{systemCode,jdbcType=VARCHAR},
+			</if>
+			<if test="uploadTime != null">
+				uploadTime = #{uploadTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=NVARCHAR},
+			</if>
+			<if test="dateCreate != null">
+				dateCreate = #{dateCreate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="delFlag != null">
+				delFlag = #{delFlag,jdbcType=CHAR},
+			</if>
+			<if test="fileType != null">
+				fileType = #{fileType,jdbcType=CHAR},
+			</if>
+		</set>
+		where fileId = #{fileId,jdbcType=INTEGER}
+	</update>
+	
+	<!-- 逻辑删除 by FileNo-->
+	<delete id="deleteByFileNo" parameterType="java.lang.String">
+		UPDATE Files
+		SET
+		delFlag='Y'
+		<where>
+			fileNo = #{fileNo,jdbcType=VARCHAR}
+		</where>
+	</delete>
+	
+	<!-- 查询-根据fileNos -->
+	<select id="getFileList" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM Files
+		<where>
+	       delFlag = 'N' AND fileNo IN
+		  <foreach item="item" index="index" collection="array"
+		      open="(" separator="," close=")">
+		        #{item}
+		  </foreach>
+		  
+		</where>
+		
+	</select>
+	
+</mapper>

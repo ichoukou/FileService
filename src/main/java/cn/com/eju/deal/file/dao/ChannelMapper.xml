@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.file.dao.ChannelMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.eju.deal.file.model.Channel" >
+    <id column="channelId" property="channelId" jdbcType="INTEGER" />
+    <result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+    <result column="channelName" property="channelName" jdbcType="NVARCHAR" />
+    <result column="permitCode" property="permitCode" jdbcType="VARCHAR" />
+    <result column="dateCreate" property="dateCreate" jdbcType="TIMESTAMP" />
+    <result column="delFlag" property="delFlag" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    channelId, channelCode, channelName, permitCode, dateCreate, delFlag
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from File_Channel
+    where channelId = #{channelId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from File_Channel
+    where channelId = #{channelId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.com.eju.deal.file.model.Channel" >
+    insert into File_Channel (channelId, channelCode, channelName, 
+      permitCode, dateCreate, delFlag
+      )
+    values (#{channelId,jdbcType=INTEGER}, #{channelCode,jdbcType=VARCHAR}, #{channelName,jdbcType=NVARCHAR}, 
+      #{permitCode,jdbcType=VARCHAR}, #{dateCreate,jdbcType=TIMESTAMP}, #{delFlag,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.eju.deal.file.model.Channel" >
+    insert into File_Channel
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="channelId != null" >
+        channelId,
+      </if>
+      <if test="channelCode != null" >
+        channelCode,
+      </if>
+      <if test="channelName != null" >
+        channelName,
+      </if>
+      <if test="permitCode != null" >
+        permitCode,
+      </if>
+      <if test="dateCreate != null" >
+        dateCreate,
+      </if>
+      <if test="delFlag != null" >
+        delFlag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="channelId != null" >
+        #{channelId,jdbcType=INTEGER},
+      </if>
+      <if test="channelCode != null" >
+        #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        #{channelName,jdbcType=NVARCHAR},
+      </if>
+      <if test="permitCode != null" >
+        #{permitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.eju.deal.file.model.Channel" >
+    update File_Channel
+    <set >
+      <if test="channelCode != null" >
+        channelCode = #{channelCode,jdbcType=VARCHAR},
+      </if>
+      <if test="channelName != null" >
+        channelName = #{channelName,jdbcType=NVARCHAR},
+      </if>
+      <if test="permitCode != null" >
+        permitCode = #{permitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dateCreate != null" >
+        dateCreate = #{dateCreate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="delFlag != null" >
+        delFlag = #{delFlag,jdbcType=CHAR},
+      </if>
+    </set>
+    where channelId = #{channelId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.com.eju.deal.file.model.Channel" >
+    update File_Channel
+    set channelCode = #{channelCode,jdbcType=VARCHAR},
+      channelName = #{channelName,jdbcType=NVARCHAR},
+      permitCode = #{permitCode,jdbcType=VARCHAR},
+      dateCreate = #{dateCreate,jdbcType=TIMESTAMP},
+      delFlag = #{delFlag,jdbcType=CHAR}
+    where channelId = #{channelId,jdbcType=INTEGER}
+  </update>
+</mapper>

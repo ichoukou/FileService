@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.base.linkage.dao.AreaMapper">
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.base.linkage.model.Area">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="CityNo" property="cityNo" jdbcType="VARCHAR" />
+		<result column="CityName" property="cityName" jdbcType="VARCHAR" />
+		<result column="DistrictNo" property="districtNo" jdbcType="VARCHAR" />
+		<result column="DistrictName" property="districtName" jdbcType="VARCHAR" />
+		<result column="AreaName" property="areaName" jdbcType="VARCHAR" />
+		<result column="AreaNo" property="areaNo" jdbcType="VARCHAR" />
+		<result column="ModDate" property="moddate" jdbcType="TIMESTAMP" />
+		<result column="FlagTrashed" property="flagTrashed" jdbcType="INTEGER" />
+		<result column="FlagDeleted" property="flagDeleted" jdbcType="INTEGER" />
+		<result column="ExDate" property="exDate" jdbcType="TIMESTAMP" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, CityNo, CityName, DistrictNo, DistrictName,
+		AreaName,AreaNo,
+		ModDate, FlagTrashed,FlagDeleted, ExDate, state
+	</sql>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		FROM BAS_Area
+		<where>
+			FlagDeleted = 0 AND ID = #{id,jdbcType=INTEGER}
+		</where>
+	</select>
+
+	<select id="queryList" parameterType="Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		FROM BAS_Area
+		<where>
+			FlagDeleted = 0
+		</where>
+	</select>
+
+	<!-- 获取所有板块 -->
+	<select id="getAll" parameterType="Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		FROM BAS_Area
+		<where>
+			FlagDeleted = 0
+		</where>
+	</select>
+
+	<!-- 根据行政区DistrictNo获取其板块 -->
+	<select id="getAreaByDistrictNo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		BAS_Area
+		<where>
+			FlagDeleted = 0 AND DistrictNo = #{districtNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<!-- 根据城市cityNo获取城市所有板块List -->
+	<select id="getAreaListByCityNo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		BAS_Area
+		<where>
+			FlagDeleted = 0 AND CityNo = #{cityNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+	
+	<!-- 根据板块AreaNo获取其板块 -->
+	<select id="getAreaByAreaNo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		BAS_Area
+		<where>
+			FlagDeleted = 0 AND AreaNo = #{AreaNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<!-- 新增 -->
+	<insert id="create" parameterType="cn.com.eju.deal.base.linkage.model.Area"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO BAS_Area
+		(
+		CityNo,
+		CityName, DistrictNo, DistrictName, AreaName,AreaNo,
+		ModDate,
+		FlagTrashed,FlagDeleted, ExDate, state
+		)
+		VALUES
+		(
+		#{cityNo,jdbcType=VARCHAR},
+		#{cityName,jdbcType=VARCHAR},
+		#{districtNo,jdbcType=VARCHAR},
+		#{districtName,jdbcType=VARCHAR},
+		#{areaName,jdbcType=VARCHAR},
+		#{areaNo,jdbcType=VARCHAR},
+		getDate(),
+		0,
+		0,
+		getDate(),
+		1
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<update id="updateByAreaNo" parameterType="java.lang.String">
+		UPDATE BAS_Area
+		<set>
+			AreaName = #{areaName,jdbcType=VARCHAR},
+			ModDate = getDate()
+		</set>
+		<where>
+			AreaNo = #{areaNo, jdbcType=VARCHAR}
+		</where>
+	</update>
+
+	<!-- 逻辑删除 -->
+	<delete id="deleteByAreaNo" parameterType="java.lang.String">
+		UPDATE BAS_Area
+		SET
+		FlagDeleted = 1
+		<where>
+			AreaNo = #{areaNo,jdbcType=VARCHAR}
+		</where>
+	</delete>
+
+</mapper>

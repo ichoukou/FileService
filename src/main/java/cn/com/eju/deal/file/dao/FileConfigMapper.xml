@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.file.dao.FileConfigMapper">
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.file.model.FileConfig">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="configCode" property="configCode" jdbcType="VARCHAR" />
+		<result column="configValue" property="configValue" jdbcType="NVARCHAR" />
+		<result column="configDesc" property="configDesc" jdbcType="NVARCHAR" />
+		<result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+		<result column="delFlag" property="delFlag" jdbcType="BIT" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, configCode, configValue, configDesc, channelCode,
+		delFlag
+	</sql>
+
+	<!-- 获取配置 -->
+	<select id="getCfgByChannelCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM File_Config
+		<where>
+			delFlag = 0
+		    <if test="channelCode != null and channelCode != ''">
+  		  		<![CDATA[
+    				AND channelCode = #{channelCode,jdbcType=VARCHAR}
+    			]]>
+			</if>
+		</where>
+		
+		
+	</select>
+
+</mapper>

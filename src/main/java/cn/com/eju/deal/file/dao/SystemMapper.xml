@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.file.dao.SystemMapper">
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.file.model.Systems">
+		<id column="systemId" property="systemId" jdbcType="INTEGER" />
+		<result column="systemCode" property="systemCode" jdbcType="VARCHAR" />
+		<result column="systemName" property="systemName" jdbcType="NVARCHAR" />
+		<result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+		<result column="authCode" property="authCode" jdbcType="VARCHAR" />
+		<result column="dateCreate" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="delFlag" property="delFlag" jdbcType="BIT" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		systemId, systemCode, systemName, channelCode, authCode,
+		dateCreate, delFlag
+	</sql>
+
+	<!-- 根据系统Code 获取渠道Code -->
+	<select id="getBySystemCode" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from File_System
+		where delFlag = 0 and systemCode =
+		#{systemCode,jdbcType=VARCHAR}
+	</select>
+
+</mapper>

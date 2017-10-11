@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.student.dao.StudentMapper">
+
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.student.model.Student">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="stuNo" property="stuNo" jdbcType="INTEGER" />
+		<result column="stuName" property="stuName" jdbcType="NVARCHAR" />
+		<result column="stuAge" property="stuAge" jdbcType="INTEGER" />
+
+		<result column="updateId" property="updateId" jdbcType="INTEGER" />
+		<result column="updateTime" property="updateTime" jdbcType="TIMESTAMP" />
+
+		<result column="userIdCreate" property="userIdCreate" jdbcType="INTEGER" />
+		<result column="dateCreate" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="delFlag" property="delFlag" jdbcType="NVARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, stuNo, stuName, stuAge, userIdCreate, dateCreate,
+		updateId,
+		updateTime,delFlag
+	</sql>
+
+	<!-- 查询-根据id -->
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM DEMO_Student
+		<where>
+			delFlag = 'N' AND id = #{id,jdbcType=INTEGER}
+		</where>
+	</select>
+
+	<!-- 查询 list -->
+	<select id="queryList" parameterType="Map" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		DEMO_student
+		<where>
+			delFlag = 'N'
+			<if test="id != null and id != ''">
+  		  		<![CDATA[
+    				AND id = #{id,jdbcType=INTEGER}
+    			]]>
+			</if>
+
+			<if test="stuNo != null and stuNo != ''">
+  		  		<![CDATA[
+    				AND stuNo = #{stuNo,jdbcType=INTEGER}
+    			]]>
+			</if>
+
+			<if test="stuName != null and stuName != ''">
+  		  		<![CDATA[
+    				AND stuName LIKE '%${stuName}%'
+    			]]>
+			</if>
+
+			<if test="stuAge != null and stuAge != ''">
+  		  		<![CDATA[
+    				AND stuAge = #{stuAge,jdbcType=INTEGER}
+    			]]>
+			</if>
+
+			<if test="userIdCreate != null and userIdCreate != ''">
+  		  		<![CDATA[
+    				AND userIdCreate = #{userIdCreate,jdbcType=INTEGER}
+    			]]>
+			</if>
+
+			<if test="dateCreate != null and dateCreate != ''">
+  		  		<![CDATA[
+    				AND dateCreate = #{dateCreate,jdbcType=TIMESTAMP}
+    			]]>
+			</if>
+
+			<if test="updateId != null and updateId != ''">
+  		  		<![CDATA[
+    				AND updateId = #{updateId,jdbcType=INTEGER}
+    			]]>
+			</if>
+
+			<if test="updateTime != null and updateTime != ''">
+  		  		<![CDATA[
+    				AND updateTime = #{updateTime,jdbcType=TIMESTAMP}
+    			]]>
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 新增 -->
+	<insert id="create" parameterType="cn.com.eju.deal.student.model.Student"
+		useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO DEMO_student
+		(
+		stuNo,
+		stuName,
+		stuAge,
+
+		updateId,
+		updateTime,
+
+		userIdCreate,
+		dateCreate,
+		delFlag
+		)
+		VALUES
+		(
+		#{stuNo},
+		#{stuName},
+		#{stuAge},
+
+		#{updateId},
+		#{updateTime},
+
+		#{userIdCreate},
+		getDate(),
+		'N'
+		)
+	</insert>
+
+	<!-- 修改 -->
+	<!-- <update id="update" parameterType="cn.com.eju.deal.student.model.Student"> 
+		UPDATE DEMO_student SET stuNo = #{stuNo,jdbcType=INTEGER}, stuName = #{stuName, 
+		jdbcType=NVARCHAR}, stuAge = #{stuAge,jdbcType=INTEGER} updateId = #{updateId,jdbcType=INTEGER}, 
+		updateTime = getDate() <where> id = #{id, jdbcType=INTEGER} </where> </update> -->
+	<update id="update" parameterType="cn.com.eju.deal.student.model.Student">
+		UPDATE DEMO_student
+		<set>
+			<if test="stuNo != null">
+				stuNo = #{stuNo,jdbcType=INTEGER},
+			</if>
+			<if test="stuName != null">
+				stuName = #{stuName,jdbcType=NVARCHAR},
+			</if>
+			<if test="stuAge != null">
+				stuAge = #{stuAge,jdbcType=INTEGER},
+			</if>
+			<if test="updateId != null">
+				stuAge = #{updateId,jdbcType=INTEGER},
+			</if>
+			updateTime = getDate()
+		</set>
+		<where>
+			id = #{id, jdbcType=INTEGER}
+		</where>
+	</update>
+
+
+	<!-- 逻辑删除 -->
+	<delete id="deleteById">
+		UPDATE DEMO_student
+		SET
+		<if test="updateId != null">
+			updateId = #{updateId,jdbcType=INTEGER},
+		</if>
+		updateTime = getDate(),
+		delFlag='Y'
+		<where>
+			id = #{id}
+		</where>
+	</delete>
+
+</mapper>

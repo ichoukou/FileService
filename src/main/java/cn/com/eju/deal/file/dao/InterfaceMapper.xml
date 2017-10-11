@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.file.dao.InterfaceMapper">
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.file.model.Interface">
+		<id column="interfaceId" property="interfaceId" jdbcType="INTEGER" />
+		<result column="interfaceCode" property="interfaceCode"
+			jdbcType="VARCHAR" />
+		<result column="interfaceName" property="interfaceName"
+			jdbcType="NVARCHAR" />
+		<result column="interfaceType" property="interfaceType"
+			jdbcType="VARCHAR" />
+		<result column="interfaceAddr" property="interfaceAddr"
+			jdbcType="VARCHAR" />
+		<result column="channelCode" property="channelCode" jdbcType="VARCHAR" />
+		<result column="dateCreate" property="dateCreate" jdbcType="TIMESTAMP" />
+		<result column="delFlag" property="delFlag" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		interfaceId, interfaceCode, interfaceName, interfaceType, interfaceAddr,
+		channelCode,
+		dateCreate, delFlag
+	</sql>
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from File_Interface
+		where interfaceId = #{interfaceId,jdbcType=INTEGER}
+	</select>
+
+
+	<!-- 获取渠道信息 -->
+	<select id="getChannelInfo" resultMap="BaseResultMap"
+		parameterType="Map">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM dbo.File_Interface
+		WHERE interfaceType=#{interfaceType,jdbcType=VARCHAR} AND channelCode =
+		(SELECT chan.channelCode
+		FROM dbo.File_System syste
+		LEFT JOIN dbo.File_Channel chan
+		ON syste.channelCode = chan.channelCode
+		WHERE syste.systemCode=#{systemCode,jdbcType=VARCHAR} AND chan.delFlag='N'
+		AND syste.delFlag='N');
+	</select>
+
+</mapper>

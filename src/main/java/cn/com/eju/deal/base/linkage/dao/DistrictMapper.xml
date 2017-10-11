@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.eju.deal.base.linkage.dao.DistrictMapper">
+	<resultMap id="BaseResultMap" type="cn.com.eju.deal.base.linkage.model.District">
+		<id column="ID" property="id" jdbcType="INTEGER" />
+		<result column="CityNo" property="cityNo" jdbcType="VARCHAR" />
+		<result column="CityName" property="cityName" jdbcType="VARCHAR" />
+		<result column="DistrictNo" property="districtNo" jdbcType="VARCHAR" />
+		<result column="DistrictName" property="districtName" jdbcType="VARCHAR" />
+		<result column="ModDate" property="moddate" jdbcType="TIMESTAMP" />
+		<result column="FlagTrashed" property="flagTrashed" jdbcType="INTEGER" />
+		<result column="FlagDeleted" property="flagDeleted" jdbcType="INTEGER" />
+		<result column="ExDate" property="exDate" jdbcType="TIMESTAMP" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		ID, CityNo, CityName, DistrictNo, DistrictName, ModDate,
+		FlagTrashed,
+		FlagDeleted,
+		ExDate, state
+	</sql>
+	
+	<select id="queryList" parameterType="Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		FROM BAS_District
+		<where>
+			FlagDeleted = 0
+		</where>
+	</select>
+	
+	<!-- 获取所有行政区 -->
+	<select id="getAll" parameterType="Map" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		FROM BAS_District
+		<where>
+			FlagDeleted = 0
+		</where>
+	</select>
+
+	<select id="getById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM BAS_District
+		<where>
+			FlagDeleted = 0 AND ID = #{id,jdbcType=INTEGER} 
+		</where>
+	</select>
+	
+	<!-- 根据districtNo获取 district -->
+	<select id="getByDistrictNo" resultMap="BaseResultMap" parameterType="java.lang.String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM BAS_District
+		<where>
+			FlagDeleted = 0 AND DistrictNo = #{districtNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<!-- 根据城市CityNo获取其行政区 -->
+	<select id="getDistrictByCityNo" resultMap="BaseResultMap"
+		parameterType="java.lang.String">
+		SELECT
+		d.DistrictNo, d.DistrictName
+		FROM
+		BAS_District d LEFT JOIN BAS_City c on d.CityNo = c.CityNo
+		<where>
+			d.FlagDeleted = 0 AND c.FlagDeleted = 0 AND d.CityNo = #{cityNo,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+</mapper>
